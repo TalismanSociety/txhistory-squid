@@ -1,0 +1,110 @@
+manifestVersion: subsquid.io/v0.1
+namespace: squid
+
+name: balances-batch-dzlzv
+description: |-
+  The very first squid from manifest
+tags:
+  - balances
+
+database:
+  type: pg-14
+
+api:
+  cmd: ['npx', 'squid-graphql-server']
+  graphql-examples:
+    - query: |-
+        {
+          transactionsByAddress(
+            addresses: ["1YmEYgtfPbwx5Jos1PjKDWRpuJWSpTzytwZgYan6kgiquNS"]
+            limit: 10
+            # lastId: "1639878840722.astar.0000006028-000002-7dd48"
+          ) {
+            id
+            chainId
+            extrinsicId
+            ss58Format
+            hash
+            blockNumber
+            timestamp
+            indexInBlock
+            section
+            method
+            name
+            signer
+            # fee
+            relatedAddresses
+          }
+        }
+
+      variables: {} # optional
+
+    - query: |-
+        {
+        	events(limit: 100, orderBy: id_DESC) {
+        		...Event
+        	}
+        }
+
+        fragment Event on Event {
+        	id
+        	name
+        	chainId
+        	ss58Format
+        	relatedAddresses
+        	data
+        	call {
+        		...Call
+        	}
+        	extrinsic {
+        		...Extrinsic
+        	}
+        }
+
+        fragment Call on Call {
+        	id
+        	name
+        	chainId
+        	ss58Format
+        	data
+        	events {
+        		id
+        		name
+        	}
+        	extrinsics {
+        		id
+        	}
+        	parent {
+        		id
+        		name
+        	}
+        	calls {
+        		id
+        		name
+        	}
+        }
+
+        fragment Extrinsic on Extrinsic {
+        	id
+        	chainId
+        	ss58Format
+        	data
+        	events {
+        		id
+        		name
+        	}
+        	call {
+        		...Call
+        	}
+        }
+
+      variables: {} # optional
+processor:
+  init:
+    - name: db-migrate
+      cmd: ['npx', 'sqd', 'db', 'migrate']
+
+  #  secrets:
+  #    - name: SECRET_ENV_NAME
+
+  cmd: ['node', 'lib/processors/index.ts']

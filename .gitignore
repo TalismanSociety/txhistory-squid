@@ -1,0 +1,11 @@
+/lib
+/node_modules
+/src/model
+
+/**Versions.json
+/**Versions.jsonl
+
+# IDE files
+/.idea
+
+.DS_Store

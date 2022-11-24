@@ -1,0 +1,103 @@
+type IndexedChain @entity {
+  id: ID!
+
+  # retrieved from the db / archive node on a timer
+  currentBlock: Int
+  headBlock: Int
+
+  # retrieved via subsquid archive registry
+  info: IndexedChainInfo
+  archive: String
+
+  # set via graphql mutation
+  enabled: Boolean
+  startBlock: Int
+  ss58Format: Int
+
+  # defaults to `https://${id}.subscan.io`, but this is sometimes wrong
+  # can be fixed via graphql mutation
+  subscanUrl: String
+  calamarUrl: String
+}
+type IndexedChainInfo {
+  name: String
+  displayName: String
+  tokens: [String!]!
+  website: String
+  description: String
+  relayChain: String
+  parachainId: String
+  genesisHash: String
+}
+
+type Block @entity {
+  id: ID!
+  blockNumber: Int!
+  blockHash: String!
+  timestamp: DateTime!
+
+  chainId: String!
+  ss58Format: Int!
+
+  events: [Event!]! @derivedFrom(field: "block")
+  calls: [Call!]! @derivedFrom(field: "block")
+  extrinsics: [Extrinsic!]! @derivedFrom(field: "block")
+}
+
+type Address @entity {
+  id: ID!
+
+  events: [AddressEvent!]! @derivedFrom(field: "address")
+}
+
+type AddressEvent @entity {
+  id: ID!
+
+  address: Address!
+  event: Event!
+}
+
+type Event @entity {
+  id: ID!
+  name: String!
+  args: JSON
+  phase: String!
+  indexInBlock: Int!
+
+  relatedAddresses: [AddressEvent!]! @derivedFrom(field: "event")
+
+  block: Block!
+  call: Call
+  extrinsic: Extrinsic
+}
+
+type Call @entity {
+  id: ID!
+  name: String!
+  data: JSON
+
+  block: Block!
+  events: [Event!]! @derivedFrom(field: "call")
+  extrinsics: [Extrinsic!]! @derivedFrom(field: "call")
+
+  parent: Call
+  calls: [Call!]! @derivedFrom(field: "parent")
+}
+
+type Extrinsic @entity {
+  id: ID!
+  version: Int!
+  hash: String!
+  indexInBlock: Int!
+  fee: BigInt
+  tip: BigInt
+  success: Boolean
+  error: String
+  signer: String
+  signature: String
+  signatureType: String
+
+  block: Block!
+  events: [Event!]! @derivedFrom(field: "extrinsic")
+  call: Call
+}

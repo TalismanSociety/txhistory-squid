@@ -1,0 +1,5 @@
+/.git
+/lib
+/node_modules
+/src/model
+/*Versions.jsonl
