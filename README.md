@@ -3,7 +3,6 @@
 <img src="assets/TalisFireSquid.svg" alt="Talisman" width="15%" align="right" />
 
 [![squid-link](https://img.shields.io/website?label=squid&style=flat-square&up_message=online&down_message=offline&url=https%3A%2F%2Fapp.gc.subsquid.io%2Fbeta%2Ftx-history%2Fv0b%2Fgraphql)](https://app.gc.subsquid.io/beta/tx-history/v0b/graphql)
-[![discord-link](https://img.shields.io/discord/858891448271634473?logo=discord&logoColor=white&style=flat-square)](https://discord.gg/talisman)
 
 **An indexer for multi-chain transaction history in Polkadot.**  
 Running on [🔥🦑](https://docs.subsquid.io/new-in-fire-squid/).
